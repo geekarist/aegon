@@ -5,7 +5,6 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -18,6 +17,7 @@ public class MainActivity extends Activity {
 
     private long mInitialCountDown;
     private TextView mTimeTextView;
+    private CountDownTimer mTimer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,6 +35,7 @@ public class MainActivity extends Activity {
                 new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        if (mTimer != null) mTimer.cancel();
                         initTime(hourOfDay, minute);
                         startTimer();
                     }
@@ -45,12 +46,11 @@ public class MainActivity extends Activity {
 
     private void startTimer() {
 
-        new CountDownTimer(mInitialCountDown, ONE_SEC) {
+        mTimer = new CountDownTimer(mInitialCountDown, ONE_SEC) {
 
             @Override
             public void onTick(long millisUntilFinished) {
                 updateEtaView(millisUntilFinished);
-                Log.d(MainActivity.this.getClass().getSimpleName(), String.valueOf(millisUntilFinished));
             }
 
             @Override
