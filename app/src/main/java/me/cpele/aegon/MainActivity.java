@@ -3,18 +3,29 @@ package me.cpele.aegon;
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.util.concurrent.TimeUnit;
+
 public class MainActivity extends Activity {
+
+    public static final long ONE_SEC = 1000;
+
+    private long mInitialCountDown;
+    private TextView mTimeTextView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        mTimeTextView = (TextView) findViewById(R.id.main_tv_time);
 
         initTime(0, 0);
 
@@ -25,16 +36,43 @@ public class MainActivity extends Activity {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         initTime(hourOfDay, minute);
+                        startTimer();
                     }
                 }, 0, 0, true).show();
             }
         });
     }
 
+    private void startTimer() {
+
+        new CountDownTimer(mInitialCountDown, ONE_SEC) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                updateEtaView(millisUntilFinished);
+                Log.d(MainActivity.this.getClass().getSimpleName(), String.valueOf(millisUntilFinished));
+            }
+
+            @Override
+            public void onFinish() {
+            }
+        }.start();
+    }
+
+    private void updateEtaView(long eta) {
+
+        long hour = TimeUnit.MILLISECONDS.toHours(eta);
+        long min = TimeUnit.MILLISECONDS.toMinutes(eta) - TimeUnit.HOURS.toMinutes(hour);
+        long sec = TimeUnit.MILLISECONDS.toSeconds(eta) - TimeUnit.MINUTES.toSeconds(min) - TimeUnit.HOURS.toSeconds(hour);
+
+        mTimeTextView.setText(getString(R.string.main_time, hour, min, sec));
+    }
+
     private void initTime(int hour, int min) {
-        TextView timeTextView = (TextView) findViewById(R.id.main_tv_time);
+
+        mInitialCountDown = TimeUnit.HOURS.toMillis(hour) + TimeUnit.MINUTES.toMillis(min);
 
         int sec = 0;
-        timeTextView.setText(getString(R.string.main_time, hour, min, sec));
+        mTimeTextView.setText(getString(R.string.main_time, hour, min, sec));
     }
 }
