@@ -21,11 +21,13 @@ public class MainActivity extends Activity {
     private static final String KEY_INITIAL_HOUR = "KEY_INITIAL_HOUR";
     private static final String KEY_INITIAL_MIN = "KEY_INITIAL_MIN";
     private static final String KEY_INITIAL_SEC = "KEY_INITIAL_SEC";
+    public static final String KEY_RUNNING = "KEY_RUNNING";
 
     private long mInitialCountDown;
     private TextView mTimeTextView;
     private CountDownTimer mTimer;
     private long mEta;
+    private boolean mRunning;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,9 +44,11 @@ public class MainActivity extends Activity {
             initialHour = savedInstanceState.getInt(KEY_INITIAL_HOUR, 0);
             initialMin = savedInstanceState.getInt(KEY_INITIAL_MIN, 0);
             initialSec = savedInstanceState.getInt(KEY_INITIAL_SEC, 0);
+            mRunning = savedInstanceState.getBoolean(KEY_RUNNING, false);
         }
 
         initTime(initialHour, initialMin, initialSec);
+        if (mRunning) startTimer();
 
         findViewById(R.id.main_tv_time).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +63,7 @@ public class MainActivity extends Activity {
                 }, 0, 0, true).show();
             }
         });
+
     }
 
     @Override
@@ -72,10 +77,12 @@ public class MainActivity extends Activity {
         outState.putInt(KEY_INITIAL_HOUR, initialHour);
         outState.putInt(KEY_INITIAL_MIN, initialMin);
         outState.putInt(KEY_INITIAL_SEC, initialSec);
+        outState.putBoolean(KEY_RUNNING, mRunning);
     }
 
     private void startTimer() {
 
+        mRunning = true;
         mTimer = new CountDownTimer(mInitialCountDown, ONE_SEC) {
 
             @Override
