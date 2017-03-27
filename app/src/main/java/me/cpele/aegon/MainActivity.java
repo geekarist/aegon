@@ -9,15 +9,23 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import java.util.concurrent.TimeUnit;
+import static java.util.concurrent.TimeUnit.HOURS;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class MainActivity extends Activity {
 
-    public static final long ONE_SEC = 1000;
+    private static final long ONE_SEC = 1000;
+
+    private static final String KEY_INITIAL_HOUR = "KEY_INITIAL_HOUR";
+    private static final String KEY_INITIAL_MIN = "KEY_INITIAL_MIN";
+    private static final String KEY_INITIAL_SEC = "KEY_INITIAL_SEC";
 
     private long mInitialCountDown;
     private TextView mTimeTextView;
     private CountDownTimer mTimer;
+    private long mEta;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,7 +35,16 @@ public class MainActivity extends Activity {
 
         mTimeTextView = (TextView) findViewById(R.id.main_tv_time);
 
-        initTime(0, 0);
+        int initialHour = 0;
+        int initialMin = 0;
+        int initialSec = 0;
+        if (savedInstanceState != null) {
+            initialHour = savedInstanceState.getInt(KEY_INITIAL_HOUR, 0);
+            initialMin = savedInstanceState.getInt(KEY_INITIAL_MIN, 0);
+            initialSec = savedInstanceState.getInt(KEY_INITIAL_SEC, 0);
+        }
+
+        initTime(initialHour, initialMin, initialSec);
 
         findViewById(R.id.main_tv_time).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,12 +53,25 @@ public class MainActivity extends Activity {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         if (mTimer != null) mTimer.cancel();
-                        initTime(hourOfDay, minute);
+                        initTime(hourOfDay, minute, 0);
                         startTimer();
                     }
                 }, 0, 0, true).show();
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        int initialHour = (int) MILLISECONDS.toHours(mEta);
+        int initialMin = (int) (MILLISECONDS.toMinutes(mEta) - HOURS.toMinutes(initialHour));
+        int initialSec = (int) (MILLISECONDS.toSeconds(mEta) - MINUTES.toSeconds(initialMin) - HOURS.toSeconds(initialHour));
+
+        outState.putInt(KEY_INITIAL_HOUR, initialHour);
+        outState.putInt(KEY_INITIAL_MIN, initialMin);
+        outState.putInt(KEY_INITIAL_SEC, initialSec);
     }
 
     private void startTimer() {
@@ -51,6 +81,7 @@ public class MainActivity extends Activity {
             @Override
             public void onTick(long millisUntilFinished) {
                 updateEtaView(millisUntilFinished);
+                mEta = millisUntilFinished;
             }
 
             @Override
@@ -61,18 +92,17 @@ public class MainActivity extends Activity {
 
     private void updateEtaView(long eta) {
 
-        long hour = TimeUnit.MILLISECONDS.toHours(eta);
-        long min = TimeUnit.MILLISECONDS.toMinutes(eta) - TimeUnit.HOURS.toMinutes(hour);
-        long sec = TimeUnit.MILLISECONDS.toSeconds(eta) - TimeUnit.MINUTES.toSeconds(min) - TimeUnit.HOURS.toSeconds(hour);
+        long hour = MILLISECONDS.toHours(eta);
+        long min = MILLISECONDS.toMinutes(eta) - HOURS.toMinutes(hour);
+        long sec = MILLISECONDS.toSeconds(eta) - MINUTES.toSeconds(min) - HOURS.toSeconds(hour);
 
         mTimeTextView.setText(getString(R.string.main_time, hour, min, sec));
     }
 
-    private void initTime(int hour, int min) {
+    private void initTime(int hour, int min, int sec) {
 
-        mInitialCountDown = TimeUnit.HOURS.toMillis(hour) + TimeUnit.MINUTES.toMillis(min);
+        mInitialCountDown = HOURS.toMillis(hour) + MINUTES.toMillis(min) + SECONDS.toMillis(sec);
 
-        int sec = 0;
         mTimeTextView.setText(getString(R.string.main_time, hour, min, sec));
     }
 }
