@@ -12,21 +12,18 @@ import android.widget.TimePicker;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class MainActivity extends Activity {
 
     private static final long ONE_SEC = 1000;
 
-    private static final String KEY_INITIAL_HOUR = "KEY_INITIAL_HOUR";
-    private static final String KEY_INITIAL_MIN = "KEY_INITIAL_MIN";
-    private static final String KEY_INITIAL_SEC = "KEY_INITIAL_SEC";
-    public static final String KEY_RUNNING = "KEY_RUNNING";
+    private static final String KEY_RUNNING = "KEY_RUNNING";
+    private static final String KEY_ETA = "KEY_ETA";
 
-    private long mInitialCountDown;
     private TextView mTimeTextView;
     private CountDownTimer mTimer;
-    private long mEta;
+    /** Absolute time OF arrival: this is different from the time TO arrival **/
+    private long mTimeOfArrival;
     private boolean mRunning;
 
     @Override
@@ -37,17 +34,12 @@ public class MainActivity extends Activity {
 
         mTimeTextView = (TextView) findViewById(R.id.main_tv_time);
 
-        int initialHour = 0;
-        int initialMin = 0;
-        int initialSec = 0;
         if (savedInstanceState != null) {
-            initialHour = savedInstanceState.getInt(KEY_INITIAL_HOUR, 0);
-            initialMin = savedInstanceState.getInt(KEY_INITIAL_MIN, 0);
-            initialSec = savedInstanceState.getInt(KEY_INITIAL_SEC, 0);
+            mTimeOfArrival = savedInstanceState.getInt(KEY_ETA, 0);
             mRunning = savedInstanceState.getBoolean(KEY_RUNNING, false);
         }
 
-        initTime(initialHour, initialMin, initialSec);
+        updateEtaView();
         if (mRunning) startTimer();
 
         findViewById(R.id.main_tv_time).setOnClickListener(new View.OnClickListener() {
@@ -57,7 +49,7 @@ public class MainActivity extends Activity {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         if (mTimer != null) mTimer.cancel();
-                        initTime(hourOfDay, minute, 0);
+                        mTimeOfArrival = System.currentTimeMillis() + HOURS.toMillis(hourOfDay) + MINUTES.toMillis(minute);
                         startTimer();
                     }
                 }, 0, 0, true).show();
@@ -70,25 +62,20 @@ public class MainActivity extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        int initialHour = (int) MILLISECONDS.toHours(mEta);
-        int initialMin = (int) (MILLISECONDS.toMinutes(mEta) - HOURS.toMinutes(initialHour));
-        int initialSec = (int) (MILLISECONDS.toSeconds(mEta) - MINUTES.toSeconds(initialMin) - HOURS.toSeconds(initialHour));
-
-        outState.putInt(KEY_INITIAL_HOUR, initialHour);
-        outState.putInt(KEY_INITIAL_MIN, initialMin);
-        outState.putInt(KEY_INITIAL_SEC, initialSec);
+        outState.putLong(KEY_ETA, mTimeOfArrival);
         outState.putBoolean(KEY_RUNNING, mRunning);
     }
 
     private void startTimer() {
 
+        long timeToArrival = System.currentTimeMillis() - mTimeOfArrival;
+
         mRunning = true;
-        mTimer = new CountDownTimer(mInitialCountDown, ONE_SEC) {
+        mTimer = new CountDownTimer(timeToArrival, ONE_SEC) {
 
             @Override
             public void onTick(long millisUntilFinished) {
-                updateEtaView(millisUntilFinished);
-                mEta = millisUntilFinished;
+                updateEtaView();
             }
 
             @Override
@@ -97,18 +84,17 @@ public class MainActivity extends Activity {
         }.start();
     }
 
-    private void updateEtaView(long eta) {
+    private void updateEtaView() {
 
-        long hour = MILLISECONDS.toHours(eta);
-        long min = MILLISECONDS.toMinutes(eta) - HOURS.toMinutes(hour);
-        long sec = MILLISECONDS.toSeconds(eta) - MINUTES.toSeconds(min) - HOURS.toSeconds(hour);
-
-        mTimeTextView.setText(getString(R.string.main_time, hour, min, sec));
-    }
-
-    private void initTime(int hour, int min, int sec) {
-
-        mInitialCountDown = HOURS.toMillis(hour) + MINUTES.toMillis(min) + SECONDS.toMillis(sec);
+        long hour = 0;
+        long min = 0;
+        long sec = 0;
+        if (mTimeOfArrival != 0) {
+            long timeToArrival = mTimeOfArrival - System.currentTimeMillis();
+            hour = MILLISECONDS.toHours(timeToArrival);
+            min = MILLISECONDS.toMinutes(timeToArrival) - HOURS.toMinutes(hour);
+            sec = MILLISECONDS.toSeconds(timeToArrival) - MINUTES.toSeconds(min) - HOURS.toSeconds(hour);
+        }
 
         mTimeTextView.setText(getString(R.string.main_time, hour, min, sec));
     }
