@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
         mTimeTextView = (TextView) findViewById(R.id.main_tv_time);
 
         if (savedInstanceState != null) {
-            mTimeOfArrival = savedInstanceState.getInt(KEY_ETA, 0);
+            mTimeOfArrival = savedInstanceState.getLong(KEY_ETA, 0);
             mRunning = savedInstanceState.getBoolean(KEY_RUNNING, false);
         }
 
@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
 
     private void startTimer() {
 
-        long timeToArrival = System.currentTimeMillis() - mTimeOfArrival;
+        long timeToArrival = mTimeOfArrival - System.currentTimeMillis();
 
         mRunning = true;
         mTimer = new CountDownTimer(timeToArrival, ONE_SEC) {
