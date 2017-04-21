@@ -80,6 +80,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void onFinish() {
+                mTimer.cancel();
             }
         }.start();
     }
