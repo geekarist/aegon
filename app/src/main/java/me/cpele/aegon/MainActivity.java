@@ -24,6 +24,7 @@ public class MainActivity extends FragmentActivity {
 
     private static final String KEY_RUNNING = "KEY_RUNNING";
     private static final String KEY_ETA = "KEY_ETA";
+    private static final String KEY_START_TIME = "KEY_START_TIME";
 
     private TextView mTimeTextView;
     private CountDownTimer mTimer;
@@ -33,6 +34,7 @@ public class MainActivity extends FragmentActivity {
     private long mTimeOfArrival;
     private boolean mRunning;
     private Timer mStopwatch;
+    private long mStartTime;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class MainActivity extends FragmentActivity {
         mTimeTextView = (TextView) findViewById(R.id.main_tv_time);
 
         if (savedInstanceState != null) {
+            mStartTime = savedInstanceState.getLong(KEY_START_TIME, 0);
             mTimeOfArrival = savedInstanceState.getLong(KEY_ETA, 0);
             mRunning = savedInstanceState.getBoolean(KEY_RUNNING, false);
         }
@@ -60,6 +63,7 @@ public class MainActivity extends FragmentActivity {
                                             + HOURS.toMillis(hours)
                                             + MINUTES.toMillis(minutes)
                                             + SECONDS.toMillis(seconds);
+                                    mStartTime = System.currentTimeMillis();
                                     startTimer();
                                 })
                                 .setFragmentManager(getSupportFragmentManager())
@@ -74,6 +78,7 @@ public class MainActivity extends FragmentActivity {
 
         outState.putLong(KEY_ETA, mTimeOfArrival);
         outState.putBoolean(KEY_RUNNING, mRunning);
+        outState.putLong(KEY_START_TIME, mStartTime);
     }
 
     private void startTimer() {
@@ -107,7 +112,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void updateStopwatchView() {
-        long elapsedTime = System.currentTimeMillis() - mTimeOfArrival;
+        long elapsedTime = System.currentTimeMillis() - mStartTime;
         long hour = MILLISECONDS.toHours(elapsedTime);
         long min = MILLISECONDS.toMinutes(elapsedTime) - HOURS.toMinutes(hour);
         long sec = MILLISECONDS.toSeconds(elapsedTime) - MINUTES.toSeconds(min) - HOURS.toSeconds(hour);
