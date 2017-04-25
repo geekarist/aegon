@@ -1,13 +1,14 @@
 package me.cpele.aegon;
 
-import android.app.Activity;
-import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.TimePicker;
+
+import com.codetroopers.betterpickers.hmspicker.HmsPickerBuilder;
+import com.codetroopers.betterpickers.hmspicker.HmsPickerDialogFragment;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,8 +16,9 @@ import java.util.TimerTask;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
     private static final long ONE_SEC = 1000;
 
@@ -25,10 +27,11 @@ public class MainActivity extends Activity {
 
     private TextView mTimeTextView;
     private CountDownTimer mTimer;
-    /** Absolute time OF arrival: this is different from the time TO arrival **/
+    /**
+     * Absolute time OF arrival: this is different from the time TO arrival
+     **/
     private long mTimeOfArrival;
     private boolean mRunning;
-    private Timer mStopwatchTimer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,14 +52,23 @@ public class MainActivity extends Activity {
         findViewById(R.id.main_tv_time).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        if (mTimer != null) mTimer.cancel();
-                        mTimeOfArrival = System.currentTimeMillis() + HOURS.toMillis(hourOfDay) + MINUTES.toMillis(minute);
-                        startTimer();
-                    }
-                }, 0, 0, true).show();
+
+                new HmsPickerBuilder().addHmsPickerDialogHandler(
+                        new HmsPickerDialogFragment.HmsPickerDialogHandlerV2() {
+                            @Override
+                            public void onDialogHmsSet(int reference, boolean isNegative,
+                                                       int hours, int minutes, int seconds) {
+                                if (mTimer != null) mTimer.cancel();
+                                mTimeOfArrival = System.currentTimeMillis()
+                                        + HOURS.toMillis(hours)
+                                        + MINUTES.toMillis(minutes)
+                                        + SECONDS.toMillis(seconds);
+                                startTimer();
+                            }
+                        })
+                        .setFragmentManager(getSupportFragmentManager())
+                        .setStyleResId(R.style.BetterPickersDialogFragment)
+                        .show();
             }
         });
 
@@ -91,8 +103,8 @@ public class MainActivity extends Activity {
     }
 
     private void switchToStopWatch() {
-        mStopwatchTimer = new Timer();
-        mStopwatchTimer.schedule(new TimerTask() {
+        Timer stopwatchTimer = new Timer();
+        stopwatchTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 updateStopwatchView();
