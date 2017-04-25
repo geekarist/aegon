@@ -2,6 +2,8 @@ package me.cpele.aegon;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -32,6 +34,7 @@ public class MainActivity extends FragmentActivity {
      **/
     private long mTimeOfArrival;
     private boolean mRunning;
+    private Timer mStopwatch;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +62,7 @@ public class MainActivity extends FragmentActivity {
                             public void onDialogHmsSet(int reference, boolean isNegative,
                                                        int hours, int minutes, int seconds) {
                                 if (mTimer != null) mTimer.cancel();
+                                if (mStopwatch != null) mStopwatch.cancel();
                                 mTimeOfArrival = System.currentTimeMillis()
                                         + HOURS.toMillis(hours)
                                         + MINUTES.toMillis(minutes)
@@ -103,11 +107,16 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void switchToStopWatch() {
-        Timer stopwatchTimer = new Timer();
-        stopwatchTimer.schedule(new TimerTask() {
+        mStopwatch = new Timer();
+        mStopwatch.schedule(new TimerTask() {
             @Override
             public void run() {
-                updateStopwatchView();
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateStopwatchView();
+                    }
+                });
             }
         }, 0, 1000);
     }
