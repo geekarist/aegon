@@ -20,7 +20,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class MainActivity extends FragmentActivity {
 
-    private static final long ONE_SEC = 1000;
+    private static final long HALF_SEC = 500;
 
     private static final String KEY_RUNNING = "KEY_RUNNING";
     private static final String KEY_ETA = "KEY_ETA";
@@ -56,7 +56,7 @@ public class MainActivity extends FragmentActivity {
                                 (reference, isNegative, hours, minutes, seconds) -> {
                                     if (mTimer != null) mTimer.cancel();
                                     if (mStopwatch != null) mStopwatch.cancel();
-                                    mTimeOfArrival = System.currentTimeMillis()
+                                    mTimeOfArrival = 1000 + System.currentTimeMillis()
                                             + HOURS.toMillis(hours)
                                             + MINUTES.toMillis(minutes)
                                             + SECONDS.toMillis(seconds);
@@ -81,7 +81,7 @@ public class MainActivity extends FragmentActivity {
         long timeToArrival = mTimeOfArrival - System.currentTimeMillis();
 
         mRunning = true;
-        mTimer = new CountDownTimer(timeToArrival, ONE_SEC) {
+        mTimer = new CountDownTimer(timeToArrival, HALF_SEC) {
 
             @Override
             public void onTick(long millisUntilFinished) {
@@ -103,7 +103,7 @@ public class MainActivity extends FragmentActivity {
             public void run() {
                 new Handler(Looper.getMainLooper()).post(() -> updateStopwatchView());
             }
-        }, 0, 1000);
+        }, 0, HALF_SEC);
     }
 
     private void updateStopwatchView() {
