@@ -6,11 +6,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.view.View;
 import android.widget.TextView;
 
 import com.codetroopers.betterpickers.hmspicker.HmsPickerBuilder;
-import com.codetroopers.betterpickers.hmspicker.HmsPickerDialogFragment;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -52,29 +50,21 @@ public class MainActivity extends FragmentActivity {
         updateEtaView();
         if (mRunning) startTimer();
 
-        findViewById(R.id.main_tv_time).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                new HmsPickerBuilder().addHmsPickerDialogHandler(
-                        new HmsPickerDialogFragment.HmsPickerDialogHandlerV2() {
-                            @Override
-                            public void onDialogHmsSet(int reference, boolean isNegative,
-                                                       int hours, int minutes, int seconds) {
-                                if (mTimer != null) mTimer.cancel();
-                                if (mStopwatch != null) mStopwatch.cancel();
-                                mTimeOfArrival = System.currentTimeMillis()
-                                        + HOURS.toMillis(hours)
-                                        + MINUTES.toMillis(minutes)
-                                        + SECONDS.toMillis(seconds);
-                                startTimer();
-                            }
-                        })
-                        .setFragmentManager(getSupportFragmentManager())
-                        .setStyleResId(R.style.BetterPickersDialogFragment)
-                        .show();
-            }
-        });
+        findViewById(R.id.main_tv_time).setOnClickListener(
+                v ->
+                        new HmsPickerBuilder().addHmsPickerDialogHandler(
+                                (reference, isNegative, hours, minutes, seconds) -> {
+                                    if (mTimer != null) mTimer.cancel();
+                                    if (mStopwatch != null) mStopwatch.cancel();
+                                    mTimeOfArrival = System.currentTimeMillis()
+                                            + HOURS.toMillis(hours)
+                                            + MINUTES.toMillis(minutes)
+                                            + SECONDS.toMillis(seconds);
+                                    startTimer();
+                                })
+                                .setFragmentManager(getSupportFragmentManager())
+                                .setStyleResId(R.style.BetterPickersDialogFragment)
+                                .show());
 
     }
 
@@ -111,12 +101,7 @@ public class MainActivity extends FragmentActivity {
         mStopwatch.schedule(new TimerTask() {
             @Override
             public void run() {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateStopwatchView();
-                    }
-                });
+                new Handler(Looper.getMainLooper()).post(() -> updateStopwatchView());
             }
         }, 0, 1000);
     }
