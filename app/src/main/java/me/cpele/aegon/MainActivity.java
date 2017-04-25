@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
@@ -25,6 +28,7 @@ public class MainActivity extends Activity {
     /** Absolute time OF arrival: this is different from the time TO arrival **/
     private long mTimeOfArrival;
     private boolean mRunning;
+    private Timer mStopwatchTimer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,9 +84,28 @@ public class MainActivity extends Activity {
 
             @Override
             public void onFinish() {
-                mTimer.cancel();
+                switchToStopWatch();
+                if (mTimer != null) mTimer.cancel();
             }
         }.start();
+    }
+
+    private void switchToStopWatch() {
+        mStopwatchTimer = new Timer();
+        mStopwatchTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                updateStopwatchView();
+            }
+        }, 0, 1000);
+    }
+
+    private void updateStopwatchView() {
+        long elapsedTime = System.currentTimeMillis() - mTimeOfArrival;
+        long hour = MILLISECONDS.toHours(elapsedTime);
+        long min = MILLISECONDS.toMinutes(elapsedTime) - HOURS.toMinutes(hour);
+        long sec = MILLISECONDS.toSeconds(elapsedTime) - MINUTES.toSeconds(min) - HOURS.toSeconds(hour);
+        mTimeTextView.setText(getString(R.string.main_time, hour, min, sec));
     }
 
     private void updateEtaView() {
