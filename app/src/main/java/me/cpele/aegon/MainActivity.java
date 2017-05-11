@@ -54,21 +54,20 @@ public class MainActivity extends FragmentActivity {
         if (mRunning) startTimer();
 
         findViewById(R.id.main_tv_time).setOnClickListener(
-                v ->
-                        new HmsPickerBuilder().addHmsPickerDialogHandler(
-                                (reference, isNegative, hours, minutes, seconds) -> {
-                                    if (mTimer != null) mTimer.cancel();
-                                    if (mStopwatch != null) mStopwatch.cancel();
-                                    mTimeOfArrival = 1000 + System.currentTimeMillis()
-                                            + HOURS.toMillis(hours)
-                                            + MINUTES.toMillis(minutes)
-                                            + SECONDS.toMillis(seconds);
-                                    mStartTime = System.currentTimeMillis();
-                                    startTimer();
-                                })
-                                .setFragmentManager(getSupportFragmentManager())
-                                .setStyleResId(R.style.BetterPickersDialogFragment)
-                                .show());
+                v -> new HmsPickerBuilder().addHmsPickerDialogHandler(
+                        (reference, isNegative, hours, minutes, seconds) -> {
+                            if (mTimer != null) mTimer.cancel();
+                            if (mStopwatch != null) mStopwatch.cancel();
+                            mTimeOfArrival = 1000 + System.currentTimeMillis()
+                                    + HOURS.toMillis(hours)
+                                    + MINUTES.toMillis(minutes)
+                                    + SECONDS.toMillis(seconds);
+                            mStartTime = System.currentTimeMillis();
+                            startTimer();
+                        })
+                        .setFragmentManager(getSupportFragmentManager())
+                        .setStyleResId(R.style.BetterPickersDialogFragment)
+                        .show());
 
     }
 
