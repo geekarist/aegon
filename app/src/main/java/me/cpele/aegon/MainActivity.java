@@ -115,7 +115,12 @@ public class MainActivity extends FragmentActivity {
         long hour = MILLISECONDS.toHours(elapsedTime);
         long min = MILLISECONDS.toMinutes(elapsedTime) - HOURS.toMinutes(hour);
         long sec = MILLISECONDS.toSeconds(elapsedTime) - MINUTES.toSeconds(min) - HOURS.toSeconds(hour);
-        mTimeTextView.setText(getString(R.string.main_time, hour, min, sec));
+        long total = mTimeOfArrival - mStartTime;
+        long totalHour = MILLISECONDS.toHours(total);
+        long totalMin = MILLISECONDS.toMinutes(total) - HOURS.toMinutes(totalHour);
+        long totalSec = MILLISECONDS.toSeconds(total) - HOURS.toSeconds(totalHour) - MINUTES.toSeconds(totalMin);
+        mTimeTextView.setText(getString(R.string.main_time, hour, min, sec, totalHour, totalMin, totalSec));
+        mTimeTextView.setTextColor(getResources().getColor(R.color.bpDarker_red, null));
     }
 
     private void updateEtaView() {
@@ -123,13 +128,24 @@ public class MainActivity extends FragmentActivity {
         long hour = 0;
         long min = 0;
         long sec = 0;
+
+        long totalHour = 0;
+        long totalMin = 0;
+        long totalSec = 0;
+
         if (mTimeOfArrival != 0) {
+
             long timeToArrival = mTimeOfArrival - System.currentTimeMillis();
             hour = MILLISECONDS.toHours(timeToArrival);
             min = MILLISECONDS.toMinutes(timeToArrival) - HOURS.toMinutes(hour);
             sec = MILLISECONDS.toSeconds(timeToArrival) - MINUTES.toSeconds(min) - HOURS.toSeconds(hour);
+
+            long total = mTimeOfArrival - mStartTime;
+            totalHour = MILLISECONDS.toHours(total);
+            totalMin = MILLISECONDS.toMinutes(total) - HOURS.toMinutes(totalHour);
+            totalSec = MILLISECONDS.toSeconds(total) - HOURS.toSeconds(totalHour) - MINUTES.toSeconds(totalMin);
         }
 
-        mTimeTextView.setText(getString(R.string.main_time, hour, min, sec));
+        mTimeTextView.setText(getString(R.string.main_time, hour, min, sec, totalHour, totalMin, totalSec));
     }
 }
