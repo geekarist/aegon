@@ -147,5 +147,6 @@ public class MainActivity extends FragmentActivity {
         }
 
         mTimeTextView.setText(getString(R.string.main_time, hour, min, sec, totalHour, totalMin, totalSec));
+        mTimeTextView.setTextColor(getResources().getColor(R.color.bpblack, null));
     }
 }
