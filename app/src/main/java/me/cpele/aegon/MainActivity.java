@@ -30,6 +30,7 @@ public class MainActivity extends FragmentActivity {
     private static final String KEY_RUNNING = "KEY_RUNNING";
     private static final String KEY_ETA = "KEY_ETA";
     private static final String KEY_START_TIME = "KEY_START_TIME";
+    public static final int NOTIFICATION_ID = 0;
 
     private TextView mTimeTextView;
     private CountDownTimer mTimer;
@@ -40,6 +41,7 @@ public class MainActivity extends FragmentActivity {
     private boolean mRunning;
     private Timer mStopwatch;
     private long mStartTime;
+    private NotificationManager mNotificationManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,6 +77,8 @@ public class MainActivity extends FragmentActivity {
                         .show());
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        mNotificationManager = getSystemService(NotificationManager.class);
     }
 
     @Override
@@ -158,20 +162,30 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onPause() {
-
         makeNotification();
-
         super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        cancelNotification();
+        super.onResume();
+    }
+
+    private void cancelNotification() {
+        mNotificationManager.cancel(NOTIFICATION_ID);
     }
 
     private void makeNotification() {
 
         Intent intent = new Intent(this, getClass());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Notification notification = new Notification.Builder(this)
-                .setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT))
-                .setSmallIcon(R.drawable.bp_material_button_background)
+                .setContentIntent(PendingIntent.getActivity(this, 0, intent, 0))
+                .setSmallIcon(R.drawable.ic_hourglass_empty_black_24dp)
+                .setContentTitle(getString(R.string.main_notification_text))
+                .setContentText(getString(R.string.main_notification_sub_text))
                 .build();
-        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        notificationManager.notify(0, notification);
+        mNotificationManager.notify(NOTIFICATION_ID, notification);
     }
 }
