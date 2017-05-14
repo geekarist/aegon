@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.codetroopers.betterpickers.hmspicker.HmsPickerBuilder;
@@ -69,6 +70,7 @@ public class MainActivity extends FragmentActivity {
                         .setStyleResId(R.style.BetterPickersDialogFragment)
                         .show());
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
