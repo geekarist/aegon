@@ -1,5 +1,9 @@
 package me.cpele.aegon;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -150,5 +154,24 @@ public class MainActivity extends FragmentActivity {
 
         mTimeTextView.setText(getString(R.string.main_time, hour, min, sec, totalHour, totalMin, totalSec));
         mTimeTextView.setTextColor(getResources().getColor(R.color.bpblack, null));
+    }
+
+    @Override
+    protected void onPause() {
+
+        makeNotification();
+
+        super.onPause();
+    }
+
+    private void makeNotification() {
+
+        Intent intent = new Intent(this, getClass());
+        Notification notification = new Notification.Builder(this)
+                .setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT))
+                .setSmallIcon(R.drawable.bp_material_button_background)
+                .build();
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.notify(0, notification);
     }
 }
