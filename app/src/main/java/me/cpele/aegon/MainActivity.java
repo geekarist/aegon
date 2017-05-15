@@ -179,7 +179,6 @@ public class MainActivity extends FragmentActivity {
     private void makeNotification() {
 
         Intent intent = new Intent(this, getClass());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Notification notification = new Notification.Builder(this)
                 .setContentIntent(PendingIntent.getActivity(this, 0, intent, 0))
                 .setSmallIcon(R.drawable.ic_hourglass_empty_black_24dp)
