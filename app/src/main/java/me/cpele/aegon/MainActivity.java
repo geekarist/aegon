@@ -172,6 +172,12 @@ public class MainActivity extends FragmentActivity {
         super.onResume();
     }
 
+    @Override
+    protected void onDestroy() {
+        cancelNotification();
+        super.onDestroy();
+    }
+
     private void cancelNotification() {
         mNotificationManager.cancel(NOTIFICATION_ID);
     }
