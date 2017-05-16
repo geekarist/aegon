@@ -175,6 +175,8 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         cancelNotification();
+        if (mTimer != null) mTimer.cancel();
+        if (mStopwatch != null) mStopwatch.cancel();
         super.onDestroy();
     }
 
