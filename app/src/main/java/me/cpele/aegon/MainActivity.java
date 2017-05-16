@@ -51,6 +51,8 @@ public class MainActivity extends FragmentActivity {
 
         mTimeTextView = (TextView) findViewById(R.id.main_tv_time);
 
+        mNotificationManager = getSystemService(NotificationManager.class);
+
         if (savedInstanceState != null) {
             mStartTime = savedInstanceState.getLong(KEY_START_TIME, 0);
             mTimeOfArrival = savedInstanceState.getLong(KEY_ETA, 0);
@@ -77,8 +79,6 @@ public class MainActivity extends FragmentActivity {
                         .show());
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        mNotificationManager = getSystemService(NotificationManager.class);
     }
 
     @Override
@@ -158,11 +158,13 @@ public class MainActivity extends FragmentActivity {
 
         mTimeTextView.setText(getString(R.string.main_time, hour, min, sec, totalHour, totalMin, totalSec));
         mTimeTextView.setTextColor(getResources().getColor(R.color.bpblack, null));
+
+        makeNotification(System.currentTimeMillis() - mStartTime);
     }
 
     @Override
     protected void onPause() {
-        makeNotification();
+        makeNotification(System.currentTimeMillis() - mStartTime);
         super.onPause();
     }
 
@@ -184,7 +186,7 @@ public class MainActivity extends FragmentActivity {
         mNotificationManager.cancel(NOTIFICATION_ID);
     }
 
-    private void makeNotification() {
+    private void makeNotification(long elapsed) {
 
         Intent intent = new Intent(this, getClass());
         Notification notification = new Notification.Builder(this)
@@ -192,6 +194,7 @@ public class MainActivity extends FragmentActivity {
                 .setSmallIcon(R.drawable.ic_hourglass_empty_black_24dp)
                 .setContentTitle(getString(R.string.main_notification_text))
                 .setContentText(getString(R.string.main_notification_sub_text))
+                .setSubText("" + elapsed)
                 .build();
         mNotificationManager.notify(NOTIFICATION_ID, notification);
     }
