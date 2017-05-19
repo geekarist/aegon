@@ -42,6 +42,7 @@ public class MainActivity extends FragmentActivity {
     private Timer mStopwatch;
     private long mStartTime;
     private NotificationManager mNotificationManager;
+    private boolean mBackground = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -159,17 +160,19 @@ public class MainActivity extends FragmentActivity {
         mTimeTextView.setText(getString(R.string.main_time_vs_total, hour, min, sec, totalHour, totalMin, totalSec));
         mTimeTextView.setTextColor(getResources().getColor(R.color.bpblack, null));
 
-        makeNotification(System.currentTimeMillis() - mStartTime);
+        if (mBackground) makeNotification(System.currentTimeMillis() - mStartTime);
     }
 
     @Override
     protected void onPause() {
+        mBackground = true;
         makeNotification(System.currentTimeMillis() - mStartTime);
         super.onPause();
     }
 
     @Override
     protected void onResume() {
+        mBackground = false;
         cancelNotification();
         super.onResume();
     }
