@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Aegon</string>
     <string name="yo">Yo</string>
-    <string name="main_time">%1$02d:%2$02d:%3$02d / %4$02d:%5$02d:%6$02d</string>
+    <string name="main_time_vs_total">%1$02d:%2$02d:%3$02d / %4$02d:%5$02d:%6$02d</string>
     <string name="main_notification_text">Aegon is running</string>
     <string name="main_notification_sub_text">Press to display timer</string>
+    <string name="main_time_hms">%1$02d:%2$02d:%3$02d</string>
 </resources>

@@ -129,7 +129,7 @@ public class MainActivity extends FragmentActivity {
         long totalHour = MILLISECONDS.toHours(total);
         long totalMin = MILLISECONDS.toMinutes(total) - HOURS.toMinutes(totalHour);
         long totalSec = MILLISECONDS.toSeconds(total) - HOURS.toSeconds(totalHour) - MINUTES.toSeconds(totalMin);
-        mTimeTextView.setText(getString(R.string.main_time, hour, min, sec, totalHour, totalMin, totalSec));
+        mTimeTextView.setText(getString(R.string.main_time_vs_total, hour, min, sec, totalHour, totalMin, totalSec));
         mTimeTextView.setTextColor(getResources().getColor(R.color.bpDarker_red, null));
     }
 
@@ -156,7 +156,7 @@ public class MainActivity extends FragmentActivity {
             totalSec = MILLISECONDS.toSeconds(total) - HOURS.toSeconds(totalHour) - MINUTES.toSeconds(totalMin);
         }
 
-        mTimeTextView.setText(getString(R.string.main_time, hour, min, sec, totalHour, totalMin, totalSec));
+        mTimeTextView.setText(getString(R.string.main_time_vs_total, hour, min, sec, totalHour, totalMin, totalSec));
         mTimeTextView.setTextColor(getResources().getColor(R.color.bpblack, null));
 
         makeNotification(System.currentTimeMillis() - mStartTime);
@@ -194,8 +194,16 @@ public class MainActivity extends FragmentActivity {
                 .setSmallIcon(R.drawable.ic_hourglass_empty_black_24dp)
                 .setContentTitle(getString(R.string.main_notification_text))
                 .setContentText(getString(R.string.main_notification_sub_text))
-                .setSubText("" + elapsed)
+                .setSubText("" + toHMS(elapsed))
                 .build();
         mNotificationManager.notify(NOTIFICATION_ID, notification);
+    }
+
+    private String toHMS(long time) {
+
+        long hour = MILLISECONDS.toHours(time);
+        long min = MILLISECONDS.toMinutes(time) - HOURS.toMinutes(hour);
+        long sec = MILLISECONDS.toSeconds(time) - HOURS.toSeconds(hour) - MINUTES.toSeconds(min);
+        return getString(R.string.main_time_hms, hour, min, sec);
     }
 }
