@@ -157,16 +157,16 @@ public class MainActivity extends FragmentActivity {
             totalSec = MILLISECONDS.toSeconds(total) - HOURS.toSeconds(totalHour) - MINUTES.toSeconds(totalMin);
         }
 
-        mTimeTextView.setText(getString(R.string.main_time_vs_total, hour, min, sec, totalHour, totalMin, totalSec));
+        String timeStr = getString(R.string.main_time_vs_total, hour, min, sec, totalHour, totalMin, totalSec);
+        mTimeTextView.setText(timeStr);
         mTimeTextView.setTextColor(getResources().getColor(R.color.bpblack, null));
 
-        if (mBackground) makeNotification(System.currentTimeMillis() - mStartTime);
+        if (mBackground) makeNotification(timeStr);
     }
 
     @Override
     protected void onPause() {
         mBackground = true;
-        makeNotification(System.currentTimeMillis() - mStartTime);
         super.onPause();
     }
 
@@ -189,7 +189,7 @@ public class MainActivity extends FragmentActivity {
         mNotificationManager.cancel(NOTIFICATION_ID);
     }
 
-    private void makeNotification(long elapsed) {
+    private void makeNotification(String timeStr) {
 
         Intent intent = new Intent(this, getClass());
         Notification notification = new Notification.Builder(this)
@@ -197,7 +197,7 @@ public class MainActivity extends FragmentActivity {
                 .setSmallIcon(R.drawable.ic_hourglass_empty_black_24dp)
                 .setContentTitle(getString(R.string.main_notification_text))
                 .setContentText(getString(R.string.main_notification_sub_text))
-                .setSubText("" + toHMS(elapsed))
+                .setSubText(timeStr)
                 .build();
         mNotificationManager.notify(NOTIFICATION_ID, notification);
     }
