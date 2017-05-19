@@ -130,8 +130,10 @@ public class MainActivity extends FragmentActivity {
         long totalHour = MILLISECONDS.toHours(total);
         long totalMin = MILLISECONDS.toMinutes(total) - HOURS.toMinutes(totalHour);
         long totalSec = MILLISECONDS.toSeconds(total) - HOURS.toSeconds(totalHour) - MINUTES.toSeconds(totalMin);
-        mTimeTextView.setText(getString(R.string.main_time_vs_total, hour, min, sec, totalHour, totalMin, totalSec));
+        String timeStr = getString(R.string.main_time_vs_total, hour, min, sec, totalHour, totalMin, totalSec);
+        mTimeTextView.setText(timeStr);
         mTimeTextView.setTextColor(getResources().getColor(R.color.bpDarker_red, null));
+        if (mBackground) makeNotification(timeStr);
     }
 
     private void updateEtaView() {
