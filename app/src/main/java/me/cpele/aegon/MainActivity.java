@@ -60,26 +60,36 @@ public class MainActivity extends FragmentActivity {
             mRunning = savedInstanceState.getBoolean(KEY_RUNNING, false);
         }
 
-        updateEtaView();
-        if (mRunning) startTimer();
+        findViewById(R.id.main_tv_time).setOnClickListener(v -> showTimePicker());
 
-        findViewById(R.id.main_tv_time).setOnClickListener(
-                v -> new HmsPickerBuilder().addHmsPickerDialogHandler(
-                        (reference, isNegative, hours, minutes, seconds) -> {
-                            if (mTimer != null) mTimer.cancel();
-                            if (mStopwatch != null) mStopwatch.cancel();
-                            mTimeOfArrival = 1000 + System.currentTimeMillis()
-                                    + HOURS.toMillis(hours)
-                                    + MINUTES.toMillis(minutes)
-                                    + SECONDS.toMillis(seconds);
-                            mStartTime = System.currentTimeMillis();
-                            startTimer();
-                        })
-                        .setFragmentManager(getSupportFragmentManager())
-                        .setStyleResId(R.style.BetterPickersDialogFragment)
-                        .show());
+        if (mRunning) {
+
+            updateEtaView();
+            startTimer();
+
+        } else {
+
+            showTimePicker();
+        }
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    private void showTimePicker() {
+        new HmsPickerBuilder().addHmsPickerDialogHandler(
+                (reference, isNegative, hours, minutes, seconds) -> {
+                    if (mTimer != null) mTimer.cancel();
+                    if (mStopwatch != null) mStopwatch.cancel();
+                    mTimeOfArrival = 1000 + System.currentTimeMillis()
+                            + HOURS.toMillis(hours)
+                            + MINUTES.toMillis(minutes)
+                            + SECONDS.toMillis(seconds);
+                    mStartTime = System.currentTimeMillis();
+                    startTimer();
+                })
+                .setFragmentManager(getSupportFragmentManager())
+                .setStyleResId(R.style.BetterPickersDialogFragment)
+                .show();
     }
 
     @Override
