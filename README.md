@@ -5,13 +5,15 @@ Features
 --------
 
 - Countdown timer
+- Show notification when in background
+- Keep screen on when running
 
 Roadmap
 -------
 
-- Larger text
-- Show notification when in background
-- Use ButterKnife
+- Restore running timer on rotation
+- Improved UI design (see default clock app)
 - Notification when timer finishes
-- Restore running timer after being killed or quitting
+- Fix 1 second offset
 - Show visual hint of how much time has elapsed
+- Use ButterKnife
