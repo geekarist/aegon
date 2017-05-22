@@ -26,11 +26,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class MainActivity extends FragmentActivity {
 
     private static final long HALF_SEC = 500;
-
-    private static final String KEY_RUNNING = "KEY_RUNNING";
-    private static final String KEY_ETA = "KEY_ETA";
-    private static final String KEY_START_TIME = "KEY_START_TIME";
-    public static final int NOTIFICATION_ID = 0;
+    private static final int NOTIFICATION_ID = 0;
 
     private TextView mTimeTextView;
     private CountDownTimer mTimer;
@@ -38,7 +34,6 @@ public class MainActivity extends FragmentActivity {
      * Absolute time OF arrival: this is different from the time TO arrival
      **/
     private long mTimeOfArrival;
-    private boolean mRunning;
     private Timer mStopwatch;
     private long mStartTime;
     private NotificationManager mNotificationManager;
@@ -54,23 +49,9 @@ public class MainActivity extends FragmentActivity {
 
         mNotificationManager = getSystemService(NotificationManager.class);
 
-        if (savedInstanceState != null) {
-            mStartTime = savedInstanceState.getLong(KEY_START_TIME, 0);
-            mTimeOfArrival = savedInstanceState.getLong(KEY_ETA, 0);
-            mRunning = savedInstanceState.getBoolean(KEY_RUNNING, false);
-        }
-
         findViewById(R.id.main_tv_time).setOnClickListener(v -> showTimePicker());
 
-        if (mRunning) {
-
-            updateEtaView();
-            startTimer();
-
-        } else {
-
-            showTimePicker();
-        }
+        showTimePicker();
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
@@ -92,20 +73,10 @@ public class MainActivity extends FragmentActivity {
                 .show();
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putLong(KEY_ETA, mTimeOfArrival);
-        outState.putBoolean(KEY_RUNNING, mRunning);
-        outState.putLong(KEY_START_TIME, mStartTime);
-    }
-
     private void startTimer() {
 
         long timeToArrival = mTimeOfArrival - System.currentTimeMillis();
 
-        mRunning = true;
         mTimer = new CountDownTimer(timeToArrival, HALF_SEC) {
 
             @Override
@@ -212,13 +183,5 @@ public class MainActivity extends FragmentActivity {
                 .setSubText(timeStr)
                 .build();
         mNotificationManager.notify(NOTIFICATION_ID, notification);
-    }
-
-    private String toHMS(long time) {
-
-        long hour = MILLISECONDS.toHours(time);
-        long min = MILLISECONDS.toMinutes(time) - HOURS.toMinutes(hour);
-        long sec = MILLISECONDS.toSeconds(time) - HOURS.toSeconds(hour) - MINUTES.toSeconds(min);
-        return getString(R.string.main_time_hms, hour, min, sec);
     }
 }
