@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.view.WindowManager;
@@ -27,15 +28,18 @@ public class MainActivity extends FragmentActivity {
 
     private static final long HALF_SEC = 500;
     private static final int NOTIFICATION_ID = 0;
+    public static final String KEY_TIME_OF_ARRIVAL = "TIME_OF_ARRIVAL";
+    public static final String KEY_START_TIME = "START_TIME";
 
-    private TextView mTimeTextView;
-    private CountDownTimer mTimer;
     /**
      * Absolute time OF arrival: this is different from the time TO arrival
      **/
     private long mTimeOfArrival;
-    private Timer mStopwatch;
     private long mStartTime;
+
+    private TextView mTimeTextView;
+    private CountDownTimer mTimer;
+    private Timer mStopwatch;
     private NotificationManager mNotificationManager;
     private boolean mBackground = true;
 
@@ -49,11 +53,30 @@ public class MainActivity extends FragmentActivity {
 
         mNotificationManager = getSystemService(NotificationManager.class);
 
-        findViewById(R.id.main_tv_time).setOnClickListener(v -> showTimePicker());
+        mTimeTextView.setOnClickListener(v -> showTimePicker());
 
-        showTimePicker();
+        if (savedInstanceState != null) {
+            restoreStateFrom(savedInstanceState);
+            startTimer();
+        } else showTimePicker();
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    private void restoreStateFrom(@NonNull Bundle savedInstanceState) {
+        mTimeOfArrival = savedInstanceState.getLong(KEY_TIME_OF_ARRIVAL);
+        mStartTime = savedInstanceState.getLong(KEY_START_TIME);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        saveStateTo(outState);
+        super.onSaveInstanceState(outState);
+    }
+
+    private void saveStateTo(@NonNull Bundle outState) {
+        outState.putLong(KEY_TIME_OF_ARRIVAL, mTimeOfArrival);
+        outState.putLong(KEY_START_TIME, mStartTime);
     }
 
     private void showTimePicker() {
