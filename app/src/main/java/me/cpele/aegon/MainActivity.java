@@ -43,6 +43,8 @@ public class MainActivity extends FragmentActivity {
     private NotificationManager mNotificationManager;
     private boolean mBackground = true;
 
+    // region Android lifecycle
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,9 +65,11 @@ public class MainActivity extends FragmentActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
-    private void restoreStateFrom(@NonNull Bundle savedInstanceState) {
-        mTimeOfArrival = savedInstanceState.getLong(KEY_TIME_OF_ARRIVAL);
-        mStartTime = savedInstanceState.getLong(KEY_START_TIME);
+    @Override
+    protected void onResume() {
+        mBackground = false;
+        cancelNotification();
+        super.onResume();
     }
 
     @Override
@@ -74,9 +78,30 @@ public class MainActivity extends FragmentActivity {
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    protected void onPause() {
+        mBackground = true;
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        cancelNotification();
+        if (mTimer != null) mTimer.cancel();
+        if (mStopwatch != null) mStopwatch.cancel();
+        super.onDestroy();
+    }
+
+    // endregion
+
     private void saveStateTo(@NonNull Bundle outState) {
         outState.putLong(KEY_TIME_OF_ARRIVAL, mTimeOfArrival);
         outState.putLong(KEY_START_TIME, mStartTime);
+    }
+
+    private void restoreStateFrom(@NonNull Bundle savedInstanceState) {
+        mTimeOfArrival = savedInstanceState.getLong(KEY_TIME_OF_ARRIVAL);
+        mStartTime = savedInstanceState.getLong(KEY_START_TIME);
     }
 
     private void showTimePicker() {
@@ -170,31 +195,6 @@ public class MainActivity extends FragmentActivity {
         if (mBackground) makeNotification(timeStr);
     }
 
-    @Override
-    protected void onPause() {
-        mBackground = true;
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        mBackground = false;
-        cancelNotification();
-        super.onResume();
-    }
-
-    @Override
-    protected void onDestroy() {
-        cancelNotification();
-        if (mTimer != null) mTimer.cancel();
-        if (mStopwatch != null) mStopwatch.cancel();
-        super.onDestroy();
-    }
-
-    private void cancelNotification() {
-        mNotificationManager.cancel(NOTIFICATION_ID);
-    }
-
     private void makeNotification(String timeStr) {
 
         Intent intent = new Intent(this, getClass());
@@ -206,5 +206,9 @@ public class MainActivity extends FragmentActivity {
                 .setSubText(timeStr)
                 .build();
         mNotificationManager.notify(NOTIFICATION_ID, notification);
+    }
+
+    private void cancelNotification() {
+        mNotificationManager.cancel(NOTIFICATION_ID);
     }
 }
