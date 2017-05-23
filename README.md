@@ -17,3 +17,4 @@ Roadmap
 - Fix 1 second offset
 - Show visual hint of how much time has elapsed
 - Use ButterKnife
+- Migrate to Kotlin
