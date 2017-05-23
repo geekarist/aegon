@@ -11,7 +11,7 @@ Features
 Roadmap
 -------
 
-- Restore running timer on rotation
+- https://en.wikipedia.org/wiki/Clock_angle_problem
 - Improved UI design (see default clock app)
 - Notification when timer finishes
 - Fix 1 second offset
