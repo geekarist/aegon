@@ -19,6 +19,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".TestTimerActivity"
+            android:exported="true"
+            />
+
     </application>
 
 </manifest>
