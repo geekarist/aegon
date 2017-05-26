@@ -67,7 +67,7 @@ public class TimerFragment extends Fragment {
 
             @Override
             public void onFinish() {
-                mListener.over();
+                mListener.onTimerEnd();
                 if (mTimer != null) mTimer.cancel();
             }
         }.start();
@@ -79,11 +79,11 @@ public class TimerFragment extends Fragment {
 
     interface Listener {
 
-        void over();
+        void onTimerEnd();
 
-        void cancel();
+        void onTimerReset();
 
-        void makeNotification(String timeStr);
+        void onTimerTick(String timeStr);
     }
 
     @Nullable
@@ -106,7 +106,7 @@ public class TimerFragment extends Fragment {
         new HmsPickerBuilder().addHmsPickerDialogHandler(
                 (reference, isNegative, hours, minutes, seconds) -> {
                     if (mTimer != null) mTimer.cancel();
-                    mListener.cancel();
+                    mListener.onTimerReset();
                     mTimeOfArrival = 1000 + System.currentTimeMillis()
                             + HOURS.toMillis(hours)
                             + MINUTES.toMillis(minutes)
@@ -153,6 +153,6 @@ public class TimerFragment extends Fragment {
         mTimeTextView.setText(timeStr);
         mTimeTextView.setTextColor(getResources().getColor(R.color.bpblack, null));
 
-        if (mBackground) mListener.makeNotification(timeStr);
+        if (mBackground) mListener.onTimerTick(timeStr);
     }
 }

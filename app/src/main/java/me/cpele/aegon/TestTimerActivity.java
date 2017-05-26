@@ -18,17 +18,17 @@ public class TestTimerActivity extends FragmentActivity implements TimerFragment
     }
 
     @Override
-    public void over() {
+    public void onTimerEnd() {
         Toast.makeText(this, "It's over", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void cancel() {
-        Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show();
+    public void onTimerReset() {
+        Toast.makeText(this, "Reset", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void makeNotification(String timeStr) {
+    public void onTimerTick(String timeStr) {
         Toast.makeText(this, "Make a notification", Toast.LENGTH_SHORT).show();
     }
 }
