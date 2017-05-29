@@ -31,6 +31,15 @@ public class TimerFragment extends Fragment {
     private boolean mBackground;
     private TextView mTimeTextView;
 
+    private Context mApp;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mApp = getActivity().getApplicationContext();
+    }
+
     static TimerFragment newInstance(long startTime, long timeOfArrival) {
         TimerFragment timerFragment = new TimerFragment();
         Bundle bundle = new Bundle();
@@ -83,7 +92,7 @@ public class TimerFragment extends Fragment {
 
         void onTimerReset();
 
-        void onTimerTick(String timeStr);
+        void onTimerProgress(String timeStr);
     }
 
     @Nullable
@@ -99,10 +108,10 @@ public class TimerFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mTimeTextView = (TextView) view.findViewById(R.id.main_tv_time);
-        mTimeTextView.setOnClickListener(v -> showTimePicker());
+        mTimeTextView.setOnClickListener(v -> showPicker());
     }
 
-    void showTimePicker() {
+    void showPicker() {
         new HmsPickerBuilder().addHmsPickerDialogHandler(
                 (reference, isNegative, hours, minutes, seconds) -> {
                     if (mTimer != null) mTimer.cancel();
@@ -149,10 +158,11 @@ public class TimerFragment extends Fragment {
             totalSec = MILLISECONDS.toSeconds(total) - HOURS.toSeconds(totalHour) - MINUTES.toSeconds(totalMin);
         }
 
-        String timeStr = getString(R.string.main_time_vs_total, hour, min, sec, totalHour, totalMin, totalSec);
+        // Has to be the app context to be able to get this when paused
+        String timeStr = mApp.getString(R.string.main_time_vs_total, hour, min, sec, totalHour, totalMin, totalSec);
         mTimeTextView.setText(timeStr);
-        mTimeTextView.setTextColor(getResources().getColor(R.color.bpblack, null));
+        mTimeTextView.setTextColor(mApp.getColor(R.color.bpblack));
 
-        if (mBackground) mListener.onTimerTick(timeStr);
+        if (mBackground) mListener.onTimerProgress(timeStr);
     }
 }
