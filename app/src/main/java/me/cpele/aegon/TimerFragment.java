@@ -3,6 +3,7 @@ package me.cpele.aegon;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -38,6 +39,27 @@ public class TimerFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mApp = getActivity().getApplicationContext();
+
+        if (savedInstanceState != null) {
+            restoreStateFrom(savedInstanceState);
+            start();
+        } else showPicker();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        saveStateTo(outState);
+        super.onSaveInstanceState(outState);
+    }
+
+    private void saveStateTo(@NonNull Bundle outState) {
+        outState.putLong(KEY_TIME_OF_ARRIVAL, mTimeOfArrival);
+        outState.putLong(KEY_START_TIME, mStartTime);
+    }
+
+    private void restoreStateFrom(@NonNull Bundle savedInstanceState) {
+        mTimeOfArrival = savedInstanceState.getLong(KEY_TIME_OF_ARRIVAL);
+        mStartTime = savedInstanceState.getLong(KEY_START_TIME);
     }
 
     static TimerFragment newInstance(long startTime, long timeOfArrival) {
