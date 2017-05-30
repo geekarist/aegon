@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,13 @@ public class TimerFragment extends Fragment {
     }
 
     @Override
+    public void onDestroy() {
+        mTimer.cancel();
+        mTimer = null;
+        super.onDestroy();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         saveStateTo(outState);
         super.onSaveInstanceState(outState);
@@ -76,6 +84,7 @@ public class TimerFragment extends Fragment {
         super.onResume();
 
         mBackground = false;
+        Log.d(getClass().getSimpleName(), "Resuming");
     }
 
     @Override
@@ -83,6 +92,7 @@ public class TimerFragment extends Fragment {
         super.onPause();
 
         mBackground = true;
+        Log.d(getClass().getSimpleName(), "Pausing");
     }
 
     public void start() {
@@ -98,7 +108,7 @@ public class TimerFragment extends Fragment {
 
             @Override
             public void onFinish() {
-                mListener.onTimerEnd();
+                if (mListener != null) mListener.onTimerEnd();
                 if (mTimer != null) mTimer.cancel();
             }
         }.start();
@@ -153,8 +163,14 @@ public class TimerFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        
+
         if (context instanceof Listener) mListener = (Listener) context;
+    }
+
+    @Override
+    public void onDetach() {
+        mListener = null;
+        super.onDetach();
     }
 
     private void updateEtaView() {
@@ -185,6 +201,11 @@ public class TimerFragment extends Fragment {
         mTimeTextView.setText(timeStr);
         mTimeTextView.setTextColor(mApp.getColor(R.color.bpblack));
 
-        if (mBackground) mListener.onTimerProgress(timeStr);
+        if (mBackground) {
+            if (mListener != null) mListener.onTimerProgress(timeStr);
+            Log.d(getClass().getSimpleName(), "In background");
+        } else {
+            Log.d(getClass().getSimpleName(), "In foreground");
+        }
     }
 }

@@ -13,7 +13,7 @@ public class TestTimerActivity extends FragmentActivity implements TimerFragment
 
         setContentView(R.layout.activity_test_timer);
 
-        TimerFragment timerFragment = (TimerFragment) getSupportFragmentManager().findFragmentById(R.id.test_timer_fr_timer);
+        final TimerFragment timerFragment = findTimerFragment();
         findViewById(R.id.test_timer_bt_cancel).setOnClickListener(v -> timerFragment.cancel());
     }
 
@@ -30,5 +30,13 @@ public class TestTimerActivity extends FragmentActivity implements TimerFragment
     @Override
     public void onTimerProgress(String timeStr) {
         Toast.makeText(this, "Make a notification", Toast.LENGTH_SHORT).show();
+    }
+
+    private TimerFragment findTimerFragment() {
+        TimerFragment fragment = (TimerFragment) getSupportFragmentManager().findFragmentByTag("TIMER");
+        if (fragment == null) {
+            fragment = (TimerFragment) getSupportFragmentManager().findFragmentById(R.id.test_timer_fr_timer);
+        }
+        return fragment;
     }
 }

@@ -10,7 +10,8 @@
         android:id="@+id/test_timer_fr_timer"
         class="me.cpele.aegon.TimerFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:tag="TIMER"/>
 
     <Button
         android:id="@+id/test_timer_bt_cancel"
