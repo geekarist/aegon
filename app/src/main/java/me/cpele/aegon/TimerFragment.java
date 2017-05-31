@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.codetroopers.betterpickers.hmspicker.HmsPickerBuilder;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -23,7 +23,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class TimerFragment extends Fragment {
 
-    private static final long HALF_SEC = 500;
+    private static final long TICK_DELAY_MS = 2000;
     public static final String KEY_TIME_OF_ARRIVAL = "TIME_OF_ARRIVAL";
     public static final String KEY_START_TIME = "START_TIME";
 
@@ -94,7 +94,7 @@ public class TimerFragment extends Fragment {
 
         long timeToArrival = mTimeOfArrival - System.currentTimeMillis();
 
-        mTimer = new CountDownTimer(timeToArrival, HALF_SEC) {
+        mTimer = new CountDownTimer(timeToArrival, TICK_DELAY_MS) {
 
             @Override
             public void onTick(long millisUntilFinished) {
@@ -183,11 +183,10 @@ public class TimerFragment extends Fragment {
         mTimeTextView.setText(timeStr);
         mTimeTextView.setTextColor(mApp.getColor(R.color.bpblack));
 
-        if (mOnTickListener != null) mOnTickListener.accept(mBackground);
-        Log.d(getClass().getSimpleName(), mBackground ? "In background" : "In foreground");
+        if (mOnTickListener != null) mOnTickListener.accept(mBackground, timeStr);
     }
 
-    interface OnTickListener extends Consumer<Boolean> {
+    interface OnTickListener extends BiConsumer<Boolean, String> {
     }
 
     interface OnEndListener extends Runnable {
