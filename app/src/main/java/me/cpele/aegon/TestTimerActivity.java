@@ -29,6 +29,8 @@ public class TestTimerActivity extends FragmentActivity {
         FragmentManager manager = getSupportFragmentManager();
         final TimerFragment timerFragment = (TimerFragment) manager.findFragmentById(R.id.test_timer_fr_timer);
 
+        cancelNotification();
+
         Context context = getApplicationContext();
         timerFragment.setOnTickListener((bg, status) -> {
             String msg = String.format("Background: %b, status: %s", bg, status);
