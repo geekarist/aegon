@@ -53,7 +53,7 @@ public class TimerFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        mTimer.cancel();
+        if (mTimer != null) mTimer.cancel();
         mTimer = null;
         super.onDestroy();
     }
