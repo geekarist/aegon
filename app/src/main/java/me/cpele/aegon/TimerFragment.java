@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.codetroopers.betterpickers.hmspicker.HmsPickerBuilder;
 
+import java.util.function.Consumer;
+
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
@@ -28,12 +30,14 @@ public class TimerFragment extends Fragment {
     private long mTimeOfArrival;
     private long mStartTime;
 
-    private Listener mListener;
     private CountDownTimer mTimer;
     private boolean mBackground;
     private TextView mTimeTextView;
 
     private Context mApp;
+
+    private OnTickListener mOnTickListener;
+    private OnEndListener mOnEndListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,15 +74,6 @@ public class TimerFragment extends Fragment {
         mStartTime = savedInstanceState.getLong(KEY_START_TIME);
     }
 
-    static TimerFragment newInstance(long startTime, long timeOfArrival) {
-        TimerFragment timerFragment = new TimerFragment();
-        Bundle bundle = new Bundle();
-        bundle.putLong(KEY_START_TIME, startTime);
-        bundle.putLong(KEY_TIME_OF_ARRIVAL, timeOfArrival);
-        timerFragment.setArguments(bundle);
-        return timerFragment;
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -108,7 +103,7 @@ public class TimerFragment extends Fragment {
 
             @Override
             public void onFinish() {
-                if (mListener != null) mListener.onTimerEnd();
+                if (mOnEndListener != null) mOnEndListener.run();
                 if (mTimer != null) mTimer.cancel();
             }
         }.start();
@@ -118,13 +113,14 @@ public class TimerFragment extends Fragment {
         if (mTimer != null) mTimer.cancel();
     }
 
-    interface Listener {
+    public TimerFragment setOnTickListener(OnTickListener onTickListener) {
+        mOnTickListener = onTickListener;
+        return this;
+    }
 
-        void onTimerEnd();
-
-        void onTimerReset();
-
-        void onTimerProgress(String timeStr);
+    public TimerFragment setOnEndListener(OnEndListener onEndListener) {
+        mOnEndListener = onEndListener;
+        return this;
     }
 
     @Nullable
@@ -147,7 +143,6 @@ public class TimerFragment extends Fragment {
         new HmsPickerBuilder().addHmsPickerDialogHandler(
                 (reference, isNegative, hours, minutes, seconds) -> {
                     if (mTimer != null) mTimer.cancel();
-                    mListener.onTimerReset();
                     mTimeOfArrival = 1000 + System.currentTimeMillis()
                             + HOURS.toMillis(hours)
                             + MINUTES.toMillis(minutes)
@@ -158,19 +153,6 @@ public class TimerFragment extends Fragment {
                 .setFragmentManager(getActivity().getSupportFragmentManager())
                 .setStyleResId(R.style.BetterPickersDialogFragment)
                 .show();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        if (context instanceof Listener) mListener = (Listener) context;
-    }
-
-    @Override
-    public void onDetach() {
-        mListener = null;
-        super.onDetach();
     }
 
     private void updateEtaView() {
@@ -201,11 +183,13 @@ public class TimerFragment extends Fragment {
         mTimeTextView.setText(timeStr);
         mTimeTextView.setTextColor(mApp.getColor(R.color.bpblack));
 
-        if (mBackground) {
-            if (mListener != null) mListener.onTimerProgress(timeStr);
-            Log.d(getClass().getSimpleName(), "In background");
-        } else {
-            Log.d(getClass().getSimpleName(), "In foreground");
-        }
+        if (mOnTickListener != null) mOnTickListener.accept(mBackground);
+        Log.d(getClass().getSimpleName(), mBackground ? "In background" : "In foreground");
+    }
+
+    interface OnTickListener extends Consumer<Boolean> {
+    }
+
+    interface OnEndListener extends Runnable {
     }
 }
