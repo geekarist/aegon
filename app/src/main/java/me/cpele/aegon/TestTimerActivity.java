@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.widget.Toast;
 
 public class TestTimerActivity extends FragmentActivity {
@@ -29,8 +28,6 @@ public class TestTimerActivity extends FragmentActivity {
         FragmentManager manager = getSupportFragmentManager();
         final TimerFragment timerFragment = (TimerFragment) manager.findFragmentById(R.id.test_timer_fr_timer);
 
-        cancelNotification();
-
         Context context = getApplicationContext();
         timerFragment
                 .setOnTickListener((bg, status) -> {
@@ -41,6 +38,13 @@ public class TestTimerActivity extends FragmentActivity {
                         Toast.makeText(context, "It's over", Toast.LENGTH_SHORT).show());
 
         findViewById(R.id.test_timer_bt_cancel).setOnClickListener(v -> timerFragment.cancel());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        cancelNotification();
     }
 
     private void cancelNotification() {
