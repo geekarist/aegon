@@ -32,12 +32,13 @@ public class TestTimerActivity extends FragmentActivity {
         cancelNotification();
 
         Context context = getApplicationContext();
-        timerFragment.setOnTickListener((bg, status) -> {
-            String msg = String.format("Background: %b, status: %s", bg, status);
-            Log.d(TestTimerActivity.class.getSimpleName(), msg);
-            if (bg) makeNotification(status);
-            else cancelNotification();
-        }).setOnEndListener(() -> Toast.makeText(context, "It's over", Toast.LENGTH_SHORT).show());
+        timerFragment
+                .setOnTickListener((bg, status) -> {
+                    if (bg) makeNotification(status);
+                    else cancelNotification();
+                })
+                .setOnEndListener(() ->
+                        Toast.makeText(context, "It's over", Toast.LENGTH_SHORT).show());
 
         findViewById(R.id.test_timer_bt_cancel).setOnClickListener(v -> timerFragment.cancel());
     }
