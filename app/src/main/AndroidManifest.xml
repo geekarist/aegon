@@ -26,6 +26,12 @@
             android:launchMode="singleTask"
             />
 
+        <activity
+            android:name=".TestStopwatchActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            />
+
     </application>
 
 </manifest>
