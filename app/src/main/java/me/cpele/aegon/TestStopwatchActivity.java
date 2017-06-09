@@ -7,11 +7,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.widget.ViewFlipper;
 
 public class TestStopwatchActivity extends FragmentActivity {
 
     private NotificationManager mNotificationManager;
-    private boolean mBackground = true;
 
     private static final int NOTIFICATION_ID = 0;
 
@@ -20,6 +20,34 @@ public class TestStopwatchActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_test_stopwatch);
+
+        mNotificationManager = getSystemService(NotificationManager.class);
+
+        StopwatchFragment fragment = (StopwatchFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.test_stopwatch_fragment);
+
+        fragment.setOnTickListener((background, status) -> {
+            if (background) makeNotification(status);
+        });
+
+        ViewFlipper flipper = (ViewFlipper) findViewById(R.id.test_stopwatch_view_flipper);
+
+        findViewById(R.id.test_stopwatch_bt_start).setOnClickListener((view) -> {
+            fragment.play();
+            flipper.showNext();
+        });
+
+        findViewById(R.id.test_stopwatch_bt_pause).setOnClickListener((view) -> {
+            fragment.pause();
+            flipper.showNext();
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        cancelNotification();
     }
 
     private void makeNotification(String timeStr) {
