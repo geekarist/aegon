@@ -14,6 +14,7 @@ public class TestStopwatchActivity extends FragmentActivity {
     private NotificationManager mNotificationManager;
 
     private static final int NOTIFICATION_ID = 0;
+    private StopwatchFragment mFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -23,26 +24,26 @@ public class TestStopwatchActivity extends FragmentActivity {
 
         mNotificationManager = getSystemService(NotificationManager.class);
 
-        StopwatchFragment fragment = findOrCreateFragment();
+        mFragment = findOrCreateFragment();
 
-        fragment.setOnTickListener((background, status) -> {
+        mFragment.setOnTickListener((background, status) -> {
             if (background) makeNotification(status);
         });
 
-        setupFlipping(fragment);
+        setupFlipping();
     }
 
-    private void setupFlipping(final StopwatchFragment fragment) {
+    private void setupFlipping() {
 
         ViewFlipper flipper = (ViewFlipper) findViewById(R.id.test_stopwatch_view_flipper);
 
         findViewById(R.id.test_stopwatch_bt_start).setOnClickListener((view) -> {
-            fragment.play();
+            mFragment.play();
             flipper.showNext();
         });
 
         findViewById(R.id.test_stopwatch_bt_pause).setOnClickListener((view) -> {
-            fragment.pause();
+            mFragment.pause();
             flipper.showNext();
         });
     }
