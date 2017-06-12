@@ -67,6 +67,12 @@ public class StopwatchFragment extends Fragment {
         mBackground = false;
     }
 
+    @Override
+    public void onDestroy() {
+        tearDown();
+        super.onDestroy();
+    }
+
     public static StopwatchFragment newInstance(long startTime, long timeOfArrival) {
         StopwatchFragment fragment = new StopwatchFragment();
         Bundle bundle = new Bundle();
@@ -79,16 +85,6 @@ public class StopwatchFragment extends Fragment {
     public StopwatchFragment setOnTickListener(OnTickListener onTickListener) {
         mOnTickListener = onTickListener;
         return this;
-    }
-
-    private void switchToStopWatch() {
-        mStopwatch = new Timer();
-        mStopwatch.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                new Handler(Looper.getMainLooper()).post(() -> updateStopwatchView());
-            }
-        }, 0, HALF_SEC);
     }
 
     private void updateStopwatchView() {
@@ -107,11 +103,17 @@ public class StopwatchFragment extends Fragment {
         mOnTickListener.accept(mBackground, timeStr);
     }
 
-    public void play() {
-        switchToStopWatch();
+    public void setup() {
+        mStopwatch = new Timer();
+        mStopwatch.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                new Handler(Looper.getMainLooper()).post(() -> updateStopwatchView());
+            }
+        }, 0, HALF_SEC);
     }
 
-    public void pause() {
+    public void tearDown() {
         if (mStopwatch != null) mStopwatch.cancel();
         mStopwatch = null;
     }

@@ -38,12 +38,12 @@ public class TestStopwatchActivity extends FragmentActivity {
         ViewFlipper flipper = (ViewFlipper) findViewById(R.id.test_stopwatch_view_flipper);
 
         findViewById(R.id.test_stopwatch_bt_start).setOnClickListener((view) -> {
-            mFragment.play();
+            mFragment.setup();
             flipper.showNext();
         });
 
         findViewById(R.id.test_stopwatch_bt_pause).setOnClickListener((view) -> {
-            mFragment.pause();
+            mFragment.tearDown();
             flipper.showNext();
         });
     }
@@ -72,6 +72,12 @@ public class TestStopwatchActivity extends FragmentActivity {
         super.onStart();
 
         cancelNotification();
+    }
+
+    @Override
+    protected void onDestroy() {
+        cancelNotification();
+        super.onDestroy();
     }
 
     private void makeNotification(String timeStr) {
