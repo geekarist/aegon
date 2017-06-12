@@ -5,6 +5,6 @@
     <string name="main_notification_text">Aegon is running</string>
     <string name="main_notification_sub_text">Press to display timer</string>
     <string name="main_time_hms">%1$02d:%2$02d:%3$02d</string>
-    <string name="stopwatch_start">Start</string>
-    <string name="stopwatch_pause">Pause</string>
+    <string name="stopwatch_setup">Setup</string>
+    <string name="stopwatch_teardown">Teardown</string>
 </resources>

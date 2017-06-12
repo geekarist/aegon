@@ -37,12 +37,12 @@ public class TestStopwatchActivity extends FragmentActivity {
 
         ViewFlipper flipper = (ViewFlipper) findViewById(R.id.test_stopwatch_view_flipper);
 
-        findViewById(R.id.test_stopwatch_bt_start).setOnClickListener((view) -> {
+        findViewById(R.id.test_stopwatch_bt_setup).setOnClickListener((view) -> {
             mFragment.setup();
             flipper.showNext();
         });
 
-        findViewById(R.id.test_stopwatch_bt_pause).setOnClickListener((view) -> {
+        findViewById(R.id.test_stopwatch_bt_teardown).setOnClickListener((view) -> {
             mFragment.tearDown();
             flipper.showNext();
         });

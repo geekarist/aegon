@@ -25,16 +25,16 @@
         >
 
         <Button
-            android:id="@+id/test_stopwatch_bt_start"
+            android:id="@+id/test_stopwatch_bt_setup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/stopwatch_start"/>
+            android:text="@string/stopwatch_setup"/>
 
         <Button
-            android:id="@+id/test_stopwatch_bt_pause"
+            android:id="@+id/test_stopwatch_bt_teardown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/stopwatch_pause"/>
+            android:text="@string/stopwatch_teardown"/>
 
     </ViewFlipper>
 
