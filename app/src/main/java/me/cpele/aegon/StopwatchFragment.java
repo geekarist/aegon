@@ -55,6 +55,20 @@ public class StopwatchFragment extends Fragment {
         mTimeTextView = (TextView) view.findViewById(R.id.stopwatch_tv_time);
     }
 
+    @Override
+    public void onPause() {
+        pause();
+        mBackground = true;
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mBackground = false;
+        play();
+    }
+
     public static StopwatchFragment newInstance(long startTime, long timeOfArrival) {
         StopwatchFragment fragment = new StopwatchFragment();
         Bundle bundle = new Bundle();
