@@ -22,6 +22,7 @@ public class StopwatchFragment extends Fragment {
 
     private static final long HALF_SEC = 500;
     private static final String KEY_START_TIME = "START_TIME";
+    private static final String KEY_TIME_OF_ARRIVAL = "TIME_OF_ARRIVAL";
 
     private Timer mStopwatch;
 
@@ -32,6 +33,14 @@ public class StopwatchFragment extends Fragment {
     private boolean mBackground = true;
 
     private OnTickListener mOnTickListener;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mStartTime = getArguments().getLong(KEY_START_TIME);
+        mTimeOfArrival = getArguments().getLong(KEY_TIME_OF_ARRIVAL);
+    }
 
     @Nullable
     @Override
@@ -46,10 +55,11 @@ public class StopwatchFragment extends Fragment {
         mTimeTextView = (TextView) view.findViewById(R.id.stopwatch_tv_time);
     }
 
-    public static StopwatchFragment newInstance(long startTime) {
+    public static StopwatchFragment newInstance(long startTime, long timeOfArrival) {
         StopwatchFragment fragment = new StopwatchFragment();
         Bundle bundle = new Bundle();
         bundle.putLong(KEY_START_TIME, startTime);
+        bundle.putLong(KEY_TIME_OF_ARRIVAL, timeOfArrival);
         fragment.setArguments(bundle);
         return fragment;
     }

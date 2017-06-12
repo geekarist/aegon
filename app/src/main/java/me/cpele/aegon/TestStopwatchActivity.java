@@ -23,12 +23,16 @@ public class TestStopwatchActivity extends FragmentActivity {
 
         mNotificationManager = getSystemService(NotificationManager.class);
 
-        StopwatchFragment fragment = (StopwatchFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.test_stopwatch_fragment);
+        StopwatchFragment fragment = findOrCreateFragment();
 
         fragment.setOnTickListener((background, status) -> {
             if (background) makeNotification(status);
         });
+
+        setupFlipping(fragment);
+    }
+
+    private void setupFlipping(final StopwatchFragment fragment) {
 
         ViewFlipper flipper = (ViewFlipper) findViewById(R.id.test_stopwatch_view_flipper);
 
@@ -41,6 +45,25 @@ public class TestStopwatchActivity extends FragmentActivity {
             fragment.pause();
             flipper.showNext();
         });
+    }
+
+    private StopwatchFragment findOrCreateFragment() {
+
+        StopwatchFragment fragment = (StopwatchFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.test_stopwatch_fragment);
+
+        if (fragment == null) {
+
+            fragment = StopwatchFragment.newInstance(
+                    System.currentTimeMillis() - 60_000,
+                    System.currentTimeMillis() - 10_000);
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.test_stopwatch_fragment, fragment)
+                    .commit();
+        }
+        return fragment;
     }
 
     @Override

@@ -8,9 +8,8 @@
     android:paddingTop="15dp"
     >
 
-    <fragment
+    <FrameLayout
         android:id="@+id/test_stopwatch_fragment"
-        class="me.cpele.aegon.StopwatchFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
