@@ -57,7 +57,6 @@ public class StopwatchFragment extends Fragment {
 
     @Override
     public void onPause() {
-        pause();
         mBackground = true;
         super.onPause();
     }
@@ -66,7 +65,6 @@ public class StopwatchFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mBackground = false;
-        play();
     }
 
     public static StopwatchFragment newInstance(long startTime, long timeOfArrival) {
