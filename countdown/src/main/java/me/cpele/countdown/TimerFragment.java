@@ -1,4 +1,4 @@
-package me.cpele.aegon;
+package me.cpele.countdown;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -186,9 +186,9 @@ public class TimerFragment extends Fragment {
         if (mOnTickListener != null) mOnTickListener.accept(mBackground, timeStr);
     }
 
-    interface OnTickListener extends BiConsumer<Boolean, String> {
+    public interface OnTickListener extends BiConsumer<Boolean, String> {
     }
 
-    interface OnEndListener extends Runnable {
+    public interface OnEndListener extends Runnable {
     }
 }

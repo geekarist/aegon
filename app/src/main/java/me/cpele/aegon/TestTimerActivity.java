@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 
+import me.cpele.countdown.TimerFragment;
+
 public class TestTimerActivity extends FragmentActivity {
 
     private static final int NOTIFICATION_ID = 0;
