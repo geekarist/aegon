@@ -23,7 +23,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class TimerFragment extends Fragment {
 
-    private static final long TICK_DELAY_MS = 2000;
+    private static final long TICK_DELAY_MS = 500;
     public static final String KEY_TIME_OF_ARRIVAL = "TIME_OF_ARRIVAL";
     public static final String KEY_START_TIME = "START_TIME";
 
@@ -113,11 +113,13 @@ public class TimerFragment extends Fragment {
         if (mTimer != null) mTimer.cancel();
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public TimerFragment setOnTickListener(OnTickListener onTickListener) {
         mOnTickListener = onTickListener;
         return this;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public TimerFragment setOnEndListener(OnEndListener onEndListener) {
         mOnEndListener = onEndListener;
         return this;
@@ -135,7 +137,7 @@ public class TimerFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mTimeTextView = (TextView) view.findViewById(R.id.main_tv_time);
+        mTimeTextView = view.findViewById(R.id.main_tv_time);
         mTimeTextView.setOnClickListener(v -> showPicker());
     }
 
