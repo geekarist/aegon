@@ -1,4 +1,4 @@
-package me.cpele.aegon;
+package me.cpele.countdown;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -11,9 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 
-import me.cpele.countdown.TimerFragment;
-
-public class TestTimerActivity extends FragmentActivity {
+public class SampleCountdownActivity extends FragmentActivity {
 
     private static final int NOTIFICATION_ID = 0;
 
@@ -23,7 +21,7 @@ public class TestTimerActivity extends FragmentActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_test_timer);
+        setContentView(R.layout.activity_sample_countdown);
 
         mNotificationManager = getSystemService(NotificationManager.class);
 

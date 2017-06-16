@@ -21,7 +21,7 @@
         </activity>
 
         <activity
-            android:name=".TestTimerActivity"
+            android:name="me.cpele.countdown.SampleCountdownActivity"
             android:exported="true"
             android:launchMode="singleTask"
             />
