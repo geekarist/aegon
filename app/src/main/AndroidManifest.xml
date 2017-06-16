@@ -27,7 +27,7 @@
             />
 
         <activity
-            android:name=".TestStopwatchActivity"
+            android:name="me.cpele.stopwatch.SampleStopwatchActivity"
             android:exported="true"
             android:launchMode="singleTask"
             />

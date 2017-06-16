@@ -1,4 +1,4 @@
-package me.cpele.aegon;
+package me.cpele.stopwatch;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -9,9 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.widget.ViewFlipper;
 
-import me.cpele.stopwatch.StopwatchFragment;
-
-public class TestStopwatchActivity extends FragmentActivity {
+public class SampleStopwatchActivity extends FragmentActivity {
 
     private NotificationManager mNotificationManager;
 
@@ -22,7 +20,7 @@ public class TestStopwatchActivity extends FragmentActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_test_stopwatch);
+        setContentView(R.layout.activity_sample_stopwatch);
 
         mNotificationManager = getSystemService(NotificationManager.class);
 
