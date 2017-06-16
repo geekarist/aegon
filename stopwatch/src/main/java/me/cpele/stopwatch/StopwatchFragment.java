@@ -1,4 +1,4 @@
-package me.cpele.aegon;
+package me.cpele.stopwatch;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -52,7 +52,7 @@ public class StopwatchFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mTimeTextView = (TextView) view.findViewById(R.id.stopwatch_tv_time);
+        mTimeTextView = view.findViewById(R.id.stopwatch_tv_time);
     }
 
     @Override
@@ -82,6 +82,7 @@ public class StopwatchFragment extends Fragment {
         return fragment;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public StopwatchFragment setOnTickListener(OnTickListener onTickListener) {
         mOnTickListener = onTickListener;
         return this;
@@ -98,7 +99,7 @@ public class StopwatchFragment extends Fragment {
         long totalSec = MILLISECONDS.toSeconds(total) - HOURS.toSeconds(totalHour) - MINUTES.toSeconds(totalMin);
         String timeStr = getString(R.string.main_time_vs_total, hour, min, sec, totalHour, totalMin, totalSec);
         mTimeTextView.setText(timeStr);
-        mTimeTextView.setTextColor(getResources().getColor(R.color.bpDarker_red, null));
+        mTimeTextView.setTextColor(getResources().getColor(android.R.color.holo_red_dark, null));
 
         mOnTickListener.accept(mBackground, timeStr);
     }

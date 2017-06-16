@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">stopwatch</string>
+    <string name="main_time_vs_total">%1$02d:%2$02d:%3$02d / %4$02d:%5$02d:%6$02d</string>
+</resources>

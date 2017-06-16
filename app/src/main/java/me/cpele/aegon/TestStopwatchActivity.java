@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.widget.ViewFlipper;
 
+import me.cpele.stopwatch.StopwatchFragment;
+
 public class TestStopwatchActivity extends FragmentActivity {
 
     private NotificationManager mNotificationManager;
@@ -35,7 +37,7 @@ public class TestStopwatchActivity extends FragmentActivity {
 
     private void setupFlipping() {
 
-        ViewFlipper flipper = (ViewFlipper) findViewById(R.id.test_stopwatch_view_flipper);
+        ViewFlipper flipper = findViewById(R.id.test_stopwatch_view_flipper);
 
         findViewById(R.id.test_stopwatch_bt_setup).setOnClickListener((view) -> {
             mFragment.setup();
