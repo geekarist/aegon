@@ -21,6 +21,12 @@
         </activity>
 
         <activity
+            android:name="me.cpele.aegon.MainActivity2"
+            android:exported="true"
+            android:launchMode="singleTask"
+            />
+
+        <activity
             android:name="me.cpele.countdown.SampleCountdownActivity"
             android:exported="true"
             android:launchMode="singleTask"
